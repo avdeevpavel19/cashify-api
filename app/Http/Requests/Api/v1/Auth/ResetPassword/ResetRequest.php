@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api\v1\Auth;
+namespace App\Http\Requests\Api\v1\Auth\ResetPassword;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginUserRequest extends FormRequest
+class ResetRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,18 +22,17 @@ class LoginUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email', 'exists:users,email'],
-            'password' => ['required'],
+            'password' => ['required', 'string', 'confirmed', 'min:5'],
         ];
     }
 
     public function messages()
     {
         return [
-            'email.required' => 'Адрес электронной почты обязателен к заполнению.',
-            'email.email' => 'Адрес электронной почты должен быть действительным электронным адресом.',
-            'email.exists' => 'Указанный адрес электронной почты не найден.',
             'password.required' => 'Пароль обязателен к заполнению.',
+            'password.string' => 'Пароль должен быть строкой.',
+            'password.confirmed' => 'Пароли не совпадают.',
+            'password.min' => 'Пароль должен содержать не менее 5 символов.',
         ];
     }
 }

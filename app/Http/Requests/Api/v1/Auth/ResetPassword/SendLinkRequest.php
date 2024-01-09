@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api\v1\Auth;
+namespace App\Http\Requests\Api\v1\Auth\ResetPassword;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginUserRequest extends FormRequest
+class SendLinkRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,7 @@ class LoginUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email', 'exists:users,email'],
-            'password' => ['required'],
+            'email' => ['required', 'email', 'exists:users,email']
         ];
     }
 
@@ -33,7 +32,6 @@ class LoginUserRequest extends FormRequest
             'email.required' => 'Адрес электронной почты обязателен к заполнению.',
             'email.email' => 'Адрес электронной почты должен быть действительным электронным адресом.',
             'email.exists' => 'Указанный адрес электронной почты не найден.',
-            'password.required' => 'Пароль обязателен к заполнению.',
         ];
     }
 }
