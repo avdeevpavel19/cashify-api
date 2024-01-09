@@ -7,13 +7,18 @@ use App\Exceptions\InvalidResetTokenException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Auth\ResetPassword\ResetRequest;
 use App\Http\Requests\Api\v1\Auth\ResetPassword\SendLinkRequest;
-use App\Mail\ResetPasswordMail;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
+use App\Services\Api\v1\Auth\ResetPasswordService;
 use App\Models\User;
 
 class ResetPasswordController extends Controller
 {
+    protected ResetPasswordService $service;
+
+    public function __construct()
+    {
+        $this->service = new  ResetPasswordService;
+    }
+
     /**
      * @throws BaseException
      */
@@ -21,32 +26,11 @@ class ResetPasswordController extends Controller
     {
         try {
             $validatedData = $request->validated();
-            $email = $validatedData['email'];
+            $resetLink = $this->service->sendLinkToEmail($validatedData);
 
-            $token = Str::random(64);
-
-            $existingToken = \DB::table('password_reset_tokens')
-                ->where('email', $email)
-                ->first();
-
-            if ($existingToken) {
-                \DB::table('password_reset_tokens')
-                    ->where('email', $email)
-                    ->update(['token' => $token]);
-            } else {
-                \DB::table('password_reset_tokens')
-                    ->where('email', $email)
-                    ->insert([
-                        'email' => $email,
-                        'token' => $token,
-                        'created_at' => now()
-                    ]);
+            if ($resetLink) {
+                return response()->json(['message' => 'Ссылка для сброса пароля отправлена']);
             }
-
-            $resetLink = url('api/password/' . $token);
-            Mail::to($email)->send(new ResetPasswordMail($resetLink));
-
-            return response()->json(['message' => 'Ссылка для сброса пароля отправлена']);
         } catch (BaseException) {
             throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
         }
@@ -59,23 +43,13 @@ class ResetPasswordController extends Controller
     {
         try {
             $tokenFromURL = \Request::segment(3);
+            $newPassword = $request->validated()['password'];
 
-            $resetTokenRecord = \DB::table('password_reset_tokens')
-                ->where('token', $tokenFromURL)
-                ->first();
+            $reset = $this->service->reset($tokenFromURL, $newPassword);
 
-            if (!$resetTokenRecord) {
-                throw new InvalidResetTokenException('Неверный токен для сброса');
+            if ($reset) {
+                return response()->json(['message' => 'Пароль успешно сброшен']);
             }
-
-            User::where('email', $resetTokenRecord->email)
-                ->update(['password' => \Hash::make($request->password)]);
-
-            \DB::table('password_reset_tokens')
-                ->where('email', $resetTokenRecord->email)
-                ->delete();
-
-            return response()->json(['message' => 'Пароль успешно сброшен']);
         } catch (InvalidResetTokenException $resetTokenException) {
             throw new InvalidResetTokenException($resetTokenException->getMessage());
         } catch (BaseException) {
