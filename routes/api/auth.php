@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\Auth\RegisterController;
+use App\Http\Controllers\Api\v1\Auth\LoginController;
 use App\Http\Controllers\Api\v1\Auth\VerificationController;
 
 /*
@@ -16,6 +17,7 @@ use App\Http\Controllers\Api\v1\Auth\VerificationController;
 */
 
 Route::post('/users', [RegisterController::class, 'store']);
+Route::post('/login', [LoginController::class, 'store']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/email/resend', [VerificationController::class, 'resend']);
