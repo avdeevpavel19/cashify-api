@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Auth\ResetPassword\ResetRequest;
 use App\Http\Requests\Api\v1\Auth\ResetPassword\SendLinkRequest;
 use App\Services\Api\v1\Auth\ResetPasswordService;
-use App\Models\User;
 
 class ResetPasswordController extends Controller
 {

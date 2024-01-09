@@ -29,5 +29,6 @@ Route::post('/password/link', [ResetPasswordController::class, 'sendLinkToEmail'
 Route::put('/password/{token}', [ResetPasswordController::class, 'reset']);
 
 
-
-//Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {});
+Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
+    Route::post('/logout', [LoginController::class, 'logout']);
+});
