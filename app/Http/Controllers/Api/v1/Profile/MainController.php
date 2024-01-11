@@ -3,18 +3,18 @@
 namespace App\Http\Controllers\Api\v1\Profile;
 
 use App\Exceptions\AvatarAlreadyUploadedException;
+use App\Exceptions\BaseException;
+use App\Exceptions\InternalServerException;
 use App\Exceptions\NewPasswordSameAsCurrentException;
 use App\Exceptions\PasswordMismatchException;
-use App\Exceptions\InternalServerException;
 use App\Exceptions\UploadException;
-use App\Exceptions\BaseException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Profile\ChangePasswordRequest;
 use App\Http\Requests\Api\v1\Profile\StoreRequest;
 use App\Http\Requests\Api\v1\Profile\UploadAvatarRequest;
 use App\Http\Resources\Api\v1\ProfileResource;
 use App\Models\User;
-use App\Services\Api\v1\Profile\ProfileService;
+use App\Services\Api\v1\ProfileService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Api\v1\Profile;
+namespace App\Services\Api\v1;
 
 use App\Exceptions\AvatarAlreadyUploadedException;
 use App\Exceptions\NewPasswordSameAsCurrentException;
