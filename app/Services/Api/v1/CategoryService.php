@@ -42,17 +42,7 @@ class CategoryService
      */
     public function show(int $categoryID, User $user): Category
     {
-        $category = Category::where('id', $categoryID)
-            ->whereNull('user_id')
-            ->first();
-
-        if (!$category) {
-            $category = $user->categories()->where('id', $categoryID)->first();
-        }
-
-        if (!$category) {
-            throw new EntityNotFoundException('Категория не найдена');
-        }
+        $category = $this->checkCategoryOwner($categoryID, $user);
 
         return $category;
     }
@@ -60,14 +50,42 @@ class CategoryService
     /**
      * @throws EntityNotFoundException|CannotEditDefaultCategoryException
      */
-    public function update(array $data, int $categoryID, User $user): object
+    public function update(array $data, int $categoryID, User $user): Category
+    {
+        $category = $this->checkCategoryOwner($categoryID, $user);
+
+        $category->update([
+            'belongs_to' => $data['belongs_to'],
+            'name' => $data['name']
+        ]);
+
+        return $category;
+    }
+
+    /**
+     * @throws CannotEditDefaultCategoryException|EntityNotFoundException
+     */
+    public function destroy(int $categoryID, User $user): bool
+    {
+        $this->checkCategoryOwner($categoryID, $user);
+
+        $category = $user->categories()->where('id', $categoryID)->first();
+        $category->delete();
+
+        return true;
+    }
+
+    /**
+     * @throws CannotEditDefaultCategoryException|EntityNotFoundException
+     */
+    private function checkCategoryOwner(int $categoryID, User $user): Category
     {
         $category = Category::where('id', $categoryID)
             ->whereNull('user_id')
             ->first();
 
         if ($category) {
-            throw new CannotEditDefaultCategoryException('Вы не можете редактировать категории по умолчанию');
+            throw new CannotEditDefaultCategoryException('Категории по умолчанию можно только получать');
         }
 
         $category = $user->categories()->where('id', $categoryID)->first();
@@ -75,11 +93,6 @@ class CategoryService
         if (!$category) {
             throw new EntityNotFoundException('Категория не найдена');
         }
-
-        $category->update([
-            'belongs_to' => $data['belongs_to'],
-            'name' => $data['name']
-        ]);
 
         return $category;
     }
