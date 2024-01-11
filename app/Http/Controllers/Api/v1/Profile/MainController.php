@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Profile\StoreRequest;
 use App\Http\Requests\Api\v1\Profile\UploadAvatarRequest;
 use App\Http\Resources\Api\v1\ProfileResource;
+use App\Models\User;
 use App\Services\Api\v1\Profile\MainService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -17,12 +18,14 @@ class MainController extends Controller
 {
     protected MainService $service;
     protected int $userID;
+    protected User $user;
 
     public function __construct()
     {
         $this->service = new MainService;
         $this->middleware(function ($request, $next) {
             $this->userID = Auth::id();
+            $this->user = Auth::user();
             return $next($request);
         });
     }
@@ -52,8 +55,7 @@ class MainController extends Controller
     {
         try {
             $avatar = $request->file('avatar');
-            $user = Auth::user();
-            $uploaded = $this->service->upload($avatar, $user);
+            $uploaded = $this->service->upload($avatar, $this->user);
 
             if (!$uploaded) {
                 throw new UploadException('Во время загрузки аватара произошла ошибка. Повторите попытку позже');
@@ -64,6 +66,27 @@ class MainController extends Controller
             throw new AvatarAlreadyUploadedException($alreadyUploadedException->getMessage());
         } catch (UploadException $avatarUploadException) {
             throw new UploadException($avatarUploadException->getMessage());
+        } catch (BaseException) {
+            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        }
+    }
+
+    /**
+     * @throws BaseException
+     */
+    public function index(): ProfileResource
+    {
+        try {
+            $profileData = $this->user->profile()->first([
+                'first_name',
+                'last_name',
+                'avatar',
+                'birthday',
+                'gender',
+                'country'
+            ]);
+
+            return new ProfileResource($profileData);
         } catch (BaseException) {
             throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
         }

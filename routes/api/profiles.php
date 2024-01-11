@@ -17,4 +17,5 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::patch('/profiles', [MainController::class, 'store']);
     Route::post('/profiles/avatar', [MainController::class, 'uploadAvatar']);
+    Route::get('/profiles', [MainController::class, 'index']);
 });
