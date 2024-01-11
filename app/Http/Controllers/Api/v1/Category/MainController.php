@@ -6,6 +6,7 @@ use App\Exceptions\BaseException;
 use App\Exceptions\EntityAlreadyExistsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Category\StoreRequest;
+use App\Http\Resources\Api\v1\CategoryCollection;
 use App\Http\Resources\Api\v1\CategoryResource;
 use App\Models\User;
 use App\Services\Api\v1\CategoryService;
@@ -37,6 +38,20 @@ class MainController extends Controller
             return new CategoryResource($category);
         } catch (EntityAlreadyExistsException $alreadyExistsException) {
             throw new EntityAlreadyExistsException($alreadyExistsException->getMessage());
+        } catch (BaseException) {
+            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        }
+    }
+
+    /**
+     * @throws BaseException
+     */
+    public function index(): CategoryCollection
+    {
+        try {
+            $categories = $this->service->index($this->user);
+
+            return new CategoryCollection($categories);
         } catch (BaseException) {
             throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
         }

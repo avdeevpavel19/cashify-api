@@ -5,6 +5,7 @@ namespace App\Services\Api\v1;
 use App\Exceptions\EntityAlreadyExistsException;
 use App\Models\Category;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
 class CategoryService
 {
@@ -24,5 +25,13 @@ class CategoryService
             'name' => $data['name'],
             'user_id' => $user->id ?? NULL,
         ]);
+    }
+
+    public function index(User $user): Collection
+    {
+        $defaultCategories = Category::whereNull('user_id')->paginate(25, ['belongs_to', 'name']);
+        $userCategories = $user->categories()->paginate(25);
+
+        return $defaultCategories->concat($userCategories);
     }
 }

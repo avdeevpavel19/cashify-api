@@ -16,4 +16,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::post('/categories', [MainController::class, 'store']);
+    Route::get('/categories', [MainController::class, 'index']);
 });
