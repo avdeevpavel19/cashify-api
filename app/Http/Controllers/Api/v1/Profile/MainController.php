@@ -3,26 +3,30 @@
 namespace App\Http\Controllers\Api\v1\Profile;
 
 use App\Exceptions\AvatarAlreadyUploadedException;
+use App\Exceptions\NewPasswordSameAsCurrentException;
+use App\Exceptions\PasswordMismatchException;
+use App\Exceptions\InternalServerException;
 use App\Exceptions\UploadException;
 use App\Exceptions\BaseException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\v1\Profile\ChangePasswordRequest;
 use App\Http\Requests\Api\v1\Profile\StoreRequest;
 use App\Http\Requests\Api\v1\Profile\UploadAvatarRequest;
 use App\Http\Resources\Api\v1\ProfileResource;
 use App\Models\User;
-use App\Services\Api\v1\Profile\MainService;
+use App\Services\Api\v1\Profile\ProfileService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class MainController extends Controller
 {
-    protected MainService $service;
+    protected ProfileService $service;
     protected int $userID;
     protected User $user;
 
     public function __construct()
     {
-        $this->service = new MainService;
+        $this->service = new ProfileService;
         $this->middleware(function ($request, $next) {
             $this->userID = Auth::id();
             $this->user = Auth::user();
@@ -77,16 +81,34 @@ class MainController extends Controller
     public function index(): ProfileResource
     {
         try {
-            $profileData = $this->user->profile()->first([
-                'first_name',
-                'last_name',
-                'avatar',
-                'birthday',
-                'gender',
-                'country'
-            ]);
+            $profileData = $this->user->profile()->first();
 
             return new ProfileResource($profileData);
+        } catch (BaseException) {
+            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        }
+    }
+
+    /**
+     * @throws BaseException|InternalServerException|NewPasswordSameAsCurrentException|PasswordMismatchException
+     */
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        try {
+            $validatedData = $request->validated();
+            $changed = $this->service->changePassword($validatedData, $this->user);
+
+            if (!$changed) {
+                throw new InternalServerException('Произошла ошибка. Повторите попытку позже');
+            }
+
+            return response()->json(['message' => 'Пароль успешно изменен']);
+        } catch (PasswordMismatchException $mismatchException) {
+            throw new PasswordMismatchException($mismatchException->getMessage());
+        } catch (NewPasswordSameAsCurrentException $sameAsCurrentException) {
+            throw new NewPasswordSameAsCurrentException($sameAsCurrentException->getMessage());
+        } catch (InternalServerException $serverException) {
+            throw new InternalServerException($serverException->getMessage());
         } catch (BaseException) {
             throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
         }
