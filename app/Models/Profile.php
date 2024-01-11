@@ -14,8 +14,14 @@ class Profile extends Model
         'user_id',
         'first_name',
         'last_name',
+        'avatar',
         'birthday',
         'gender',
         'country'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

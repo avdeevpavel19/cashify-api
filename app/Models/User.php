@@ -49,4 +49,9 @@ class User extends Authenticatable
     {
         $this->notify(new VerifyEmailNotification);
     }
+
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
 }
