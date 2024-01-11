@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api\v1\Category;
 
 use App\Exceptions\BaseException;
 use App\Exceptions\EntityAlreadyExistsException;
+use App\Exceptions\EntityNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Category\StoreRequest;
 use App\Http\Resources\Api\v1\CategoryCollection;
 use App\Http\Resources\Api\v1\CategoryResource;
+use App\Models\Category;
 use App\Models\User;
 use App\Services\Api\v1\CategoryService;
 use Illuminate\Support\Facades\Auth;
@@ -52,6 +54,22 @@ class MainController extends Controller
             $categories = $this->service->index($this->user);
 
             return new CategoryCollection($categories);
+        } catch (BaseException) {
+            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        }
+    }
+
+    /**
+     * @throws BaseException|EntityNotFoundException
+     */
+    public function show(int $categoryID)
+    {
+        try {
+            $category = $this->service->show($categoryID, $this->user);
+
+            return new CategoryResource($category);
+        } catch (EntityNotFoundException $notFoundException) {
+            throw new EntityNotFoundException($notFoundException->getMessage());
         } catch (BaseException) {
             throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
         }

@@ -3,6 +3,7 @@
 namespace App\Services\Api\v1;
 
 use App\Exceptions\EntityAlreadyExistsException;
+use App\Exceptions\EntityNotFoundException;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -33,5 +34,25 @@ class CategoryService
         $userCategories = $user->categories()->paginate(25);
 
         return $defaultCategories->concat($userCategories);
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function show(int $categoryID, User $user): Category
+    {
+        $category = Category::where('id', $categoryID)
+            ->whereNull('user_id')
+            ->first();
+
+        if (!$category) {
+            $category = $user->categories()->where('id', $categoryID)->first();
+        }
+
+        if (!$category) {
+            throw new EntityNotFoundException('Категория не найдена');
+        }
+
+        return $category;
     }
 }
