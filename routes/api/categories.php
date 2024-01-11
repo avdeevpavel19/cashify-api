@@ -18,4 +18,5 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::post('/categories', [MainController::class, 'store']);
     Route::get('/categories', [MainController::class, 'index']);
     Route::get('/categories/{categoryID}', [MainController::class, 'show']);
+    Route::patch('/categories/{categoryID}', [MainController::class, 'update']);
 });

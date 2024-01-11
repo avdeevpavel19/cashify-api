@@ -2,6 +2,7 @@
 
 namespace App\Services\Api\v1;
 
+use App\Exceptions\CannotEditDefaultCategoryException;
 use App\Exceptions\EntityAlreadyExistsException;
 use App\Exceptions\EntityNotFoundException;
 use App\Models\Category;
@@ -52,6 +53,33 @@ class CategoryService
         if (!$category) {
             throw new EntityNotFoundException('Категория не найдена');
         }
+
+        return $category;
+    }
+
+    /**
+     * @throws EntityNotFoundException|CannotEditDefaultCategoryException
+     */
+    public function update(array $data, int $categoryID, User $user): object
+    {
+        $category = Category::where('id', $categoryID)
+            ->whereNull('user_id')
+            ->first();
+
+        if ($category) {
+            throw new CannotEditDefaultCategoryException('Вы не можете редактировать категории по умолчанию');
+        }
+
+        $category = $user->categories()->where('id', $categoryID)->first();
+
+        if (!$category) {
+            throw new EntityNotFoundException('Категория не найдена');
+        }
+
+        $category->update([
+            'belongs_to' => $data['belongs_to'],
+            'name' => $data['name']
+        ]);
 
         return $category;
     }
