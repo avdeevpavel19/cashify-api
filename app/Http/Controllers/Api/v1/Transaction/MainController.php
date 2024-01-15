@@ -57,4 +57,20 @@ class MainController extends Controller
             throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
         }
     }
+
+    /**
+     * @throws EntityNotFoundException|BaseException
+     */
+    public function show(int $transactionID): TransactionResource
+    {
+        try {
+            $transaction = $this->service->show($this->user, $transactionID);
+
+            return new TransactionResource($transaction);
+        } catch (EntityNotFoundException $notFoundException) {
+            throw new EntityNotFoundException($notFoundException->getMessage());
+        } catch (BaseException) {
+            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        }
+    }
 }

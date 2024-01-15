@@ -34,6 +34,20 @@ class TransactionService
     /**
      * @throws EntityNotFoundException
      */
+    public function show(User $user, int $transactionID): Transaction
+    {
+        $transaction = $user->transactions()->where('id', $transactionID)->first();
+
+        if (!$transaction) {
+            throw new EntityNotFoundException('Транзация не найдена');
+        }
+
+        return $transaction;
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
     private function validateCategoryExists(User $user, string $categoryID): void
     {
         $userCategories = $user->categories()->where('id', $categoryID)->exists();
