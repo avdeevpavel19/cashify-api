@@ -16,4 +16,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::post('/transactions', [MainController::class, 'store']);
+    Route::get('/transactions', [MainController::class, 'index']);
 });

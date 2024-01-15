@@ -6,6 +6,7 @@ use App\Exceptions\EntityNotFoundException;
 use App\Models\Category;
 use App\Models\Transaction;
 use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class TransactionService
 {
@@ -25,10 +26,15 @@ class TransactionService
         ]);
     }
 
+    public function index(User $user): LengthAwarePaginator
+    {
+        return $user->transactions()->paginate(25);
+    }
+
     /**
      * @throws EntityNotFoundException
      */
-    private function validateCategoryExists(User $user, string $categoryID)
+    private function validateCategoryExists(User $user, string $categoryID): void
     {
         $userCategories = $user->categories()->where('id', $categoryID)->exists();
         $defaultCategories = Category::whereNull('user_id')

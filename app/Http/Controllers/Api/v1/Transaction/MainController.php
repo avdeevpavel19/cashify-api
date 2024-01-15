@@ -6,6 +6,7 @@ use App\Exceptions\BaseException;
 use App\Exceptions\EntityNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Transaction\StoreRequest;
+use App\Http\Resources\Api\v1\TransactionCollection;
 use App\Http\Resources\Api\v1\TransactionResource;
 use App\Models\User;
 use App\Services\Api\v1\TransactionService;
@@ -38,6 +39,20 @@ class MainController extends Controller
             return new TransactionResource($translation);
         } catch (EntityNotFoundException $e) {
             throw new EntityNotFoundException($e->getMessage());
+        } catch (BaseException) {
+            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        }
+    }
+
+    /**
+     * @throws BaseException
+     */
+    public function index(): TransactionCollection
+    {
+        try {
+            $transactions = $this->service->index($this->user);
+
+            return new TransactionCollection($transactions);
         } catch (BaseException) {
             throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
         }
