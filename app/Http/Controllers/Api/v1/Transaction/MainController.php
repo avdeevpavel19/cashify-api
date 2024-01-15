@@ -13,6 +13,7 @@ use App\Http\Resources\Api\v1\TransactionResource;
 use App\Models\User;
 use App\Services\Api\v1\TransactionService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class MainController extends Controller
@@ -50,10 +51,10 @@ class MainController extends Controller
     /**
      * @throws BaseException
      */
-    public function index(): TransactionCollection
+    public function index(Request $request): TransactionCollection
     {
         try {
-            $transactions = $this->service->index($this->user);
+            $transactions = $this->service->index($this->user, $request);
 
             return new TransactionCollection($transactions);
         } catch (BaseException) {

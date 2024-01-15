@@ -3,10 +3,12 @@
 namespace App\Services\Api\v1;
 
 use App\Exceptions\EntityNotFoundException;
+use App\Filters\TransactionFilter;
 use App\Models\Category;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Request;
 
 class TransactionService
 {
@@ -26,9 +28,13 @@ class TransactionService
         ]);
     }
 
-    public function index(User $user): LengthAwarePaginator
+    public function index(User $user, Request $request): LengthAwarePaginator
     {
-        return $user->transactions()->paginate(25);
+        $transactions = $user->transactions();
+        $filter = new TransactionFilter($transactions);
+        $filter->apply($request);
+
+        return $transactions->paginate(25);
     }
 
     /**
