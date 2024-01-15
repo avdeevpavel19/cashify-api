@@ -25,7 +25,7 @@ class StoreRequest extends FormRequest
             'amount' => ['required', 'numeric', 'between:0,999999.99'],
             'category_id' => ['required', 'integer'],
             'date' => ['required', 'date'],
-            'description' => ['nullable', 'string', 'max:1000'],
+            'description' => ['string', 'max:1000'],
         ];
     }
 
@@ -39,7 +39,6 @@ class StoreRequest extends FormRequest
             'category_id.integer' => 'Категория должна быть целым числом.',
             'date.required' => 'Дата обязательна для заполнения.',
             'date.date' => 'Дата должна быть действительной датой.',
-            'description.nullable' => 'Описание может быть пустым.',
             'description.string' => 'Описание должно быть строкой.',
             'description.max' => 'Описание не должно превышать 1000 символов.',
         ];

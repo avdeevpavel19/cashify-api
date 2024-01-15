@@ -42,13 +42,25 @@ class TransactionService
     /**
      * @throws EntityNotFoundException
      */
-    public function update(array $data, User $user, int $transactionID)
+    public function update(array $data, User $user, int $transactionID): Transaction
     {
         $transaction = $this->findUserTransactionById($user, $transactionID);
 
         $transaction->update($data);
 
         return $transaction;
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function destroy(User $user, int $transactionID): bool
+    {
+        $transaction = $this->findUserTransactionById($user, $transactionID);
+
+        $transaction->delete();
+
+        return true;
     }
 
     /**

@@ -36,7 +36,6 @@ class UpdateRequest extends FormRequest
             'amount.between' => 'Сумма должна быть между 0 и 999999.',
             'category_id.integer' => 'Категория должна быть целым числом.',
             'date.date' => 'Дата должна быть действительной датой.',
-            'description.nullable' => 'Описание может быть пустым.',
             'description.string' => 'Описание должно быть строкой.',
             'description.max' => 'Описание не должно превышать 1000 символов.',
         ];

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1\Transaction;
 
 use App\Exceptions\BaseException;
 use App\Exceptions\EntityNotFoundException;
+use App\Exceptions\InternalServerException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Transaction\StoreRequest;
 use App\Http\Requests\Api\v1\Transaction\UpdateRequest;
@@ -11,6 +12,7 @@ use App\Http\Resources\Api\v1\TransactionCollection;
 use App\Http\Resources\Api\v1\TransactionResource;
 use App\Models\User;
 use App\Services\Api\v1\TransactionService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class MainController extends Controller
@@ -85,6 +87,26 @@ class MainController extends Controller
             $transaction = $this->service->update($validatedData, $this->user, $transactionID);
 
             return new TransactionResource($transaction);
+        } catch (EntityNotFoundException $notFoundException) {
+            throw new EntityNotFoundException($notFoundException->getMessage());
+        } catch (BaseException) {
+            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        }
+    }
+
+    /**
+     * @throws InternalServerException|EntityNotFoundException|BaseException
+     */
+    public function destroy(int $transactionID): JsonResponse
+    {
+        try {
+            $deletedTransaction = $this->service->destroy($this->user, $transactionID);
+
+            if (!$deletedTransaction) {
+                throw new InternalServerException('Во время удаления произошла ошибка. Повторите попытку позже');
+            }
+
+            return response()->json(['message' => 'Транзакция успешно удалена']);
         } catch (EntityNotFoundException $notFoundException) {
             throw new EntityNotFoundException($notFoundException->getMessage());
         } catch (BaseException) {
