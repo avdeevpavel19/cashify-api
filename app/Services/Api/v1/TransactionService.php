@@ -36,11 +36,17 @@ class TransactionService
      */
     public function show(User $user, int $transactionID): Transaction
     {
-        $transaction = $user->transactions()->where('id', $transactionID)->first();
+        return $this->findUserTransactionById($user, $transactionID);
+    }
 
-        if (!$transaction) {
-            throw new EntityNotFoundException('Транзация не найдена');
-        }
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function update(array $data, User $user, int $transactionID)
+    {
+        $transaction = $this->findUserTransactionById($user, $transactionID);
+
+        $transaction->update($data);
 
         return $transaction;
     }
@@ -58,5 +64,19 @@ class TransactionService
         if (!$userCategories && !$defaultCategories) {
             throw new EntityNotFoundException('Указанная категория не найдена');
         }
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    private function findUserTransactionById(User $user, int $transactionID): Transaction
+    {
+        $transaction = $user->transactions()->where('id', $transactionID)->first();
+
+        if (!$transaction) {
+            throw new EntityNotFoundException('Транзация не найдена');
+        }
+
+        return $transaction;
     }
 }
