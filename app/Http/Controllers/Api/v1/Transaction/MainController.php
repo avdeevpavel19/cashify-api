@@ -123,7 +123,7 @@ class MainController extends Controller
         try {
             $analysisData = $this->service->analyzeByCategories($this->user);
 
-            dd($analysisData);
+            return $analysisData;
         } catch (BaseException) {
             throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
         }

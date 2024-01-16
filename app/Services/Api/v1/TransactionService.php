@@ -86,7 +86,7 @@ class TransactionService
                     'total_income' => $totalIncome,
                     'total_expense' => $totalExpense
                 ];
-            });
+            })->sortBy('category.id')->values();
 
         return $analysis;
     }
