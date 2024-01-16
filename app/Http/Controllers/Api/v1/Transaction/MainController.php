@@ -114,4 +114,18 @@ class MainController extends Controller
             throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
         }
     }
+
+    /**
+     * @throws BaseException
+     */
+    public function analyze()
+    {
+        try {
+            $analysisData = $this->service->analyzeByCategories($this->user);
+
+            dd($analysisData);
+        } catch (BaseException) {
+            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        }
+    }
 }

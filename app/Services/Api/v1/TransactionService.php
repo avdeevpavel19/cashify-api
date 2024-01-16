@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 
 class TransactionService
@@ -67,6 +68,27 @@ class TransactionService
         $transaction->delete();
 
         return true;
+    }
+
+    public function analyzeByCategories(User $user): Collection
+    {
+        $analysis = $user->transactions()
+            ->with('category')
+            ->get()
+            ->groupBy('category.id')
+            ->map(function ($transactions) {
+                $category = $transactions->first()->category;
+                $totalIncome = $transactions->where('category.belongs_to', 'income')->sum('amount');
+                $totalExpense = $transactions->where('category.belongs_to', 'expense')->sum('amount');
+
+                return [
+                    'category_name' => $category->name,
+                    'total_income' => $totalIncome,
+                    'total_expense' => $totalExpense
+                ];
+            });
+
+        return $analysis;
     }
 
     /**
