@@ -2,6 +2,7 @@
 
 namespace App\Services\Api\v1;
 
+use App\Exceptions\EntityNotFoundException;
 use App\Models\Goal;
 use App\Models\User;
 
@@ -20,5 +21,19 @@ class GoalService
     public function index(User $user)
     {
         return $user->goals()->paginate(25);
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function show(User $user, int $goalID): Goal
+    {
+        $goal = $user->goals()->where('id', $goalID)->first();
+
+        if (!$goal) {
+            throw new EntityNotFoundException('Указанная цель не найдена');
+        }
+
+        return $goal;
     }
 }

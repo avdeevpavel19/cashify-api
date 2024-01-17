@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1\Goal;
 
 use App\Exceptions\BaseException;
+use App\Exceptions\EntityNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Goal\StoreRequest;
 use App\Http\Resources\Api\v1\GoalCollection;
@@ -48,6 +49,21 @@ class MainController extends Controller
             $goals = $this->service->index($this->user);
 
             return new GoalCollection($goals);
+        } catch (BaseException) {
+            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        }
+    }
+
+    /**
+     * @throws BaseException
+     */
+    public function show(int $goalID)
+    {
+        try {
+            $goal = $this->service->show($this->user, $goalID);
+            return new GoalResource($goal);
+        } catch (EntityNotFoundException $notFoundException) {
+            throw new EntityNotFoundException($notFoundException->getMessage());
         } catch (BaseException) {
             throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
         }
