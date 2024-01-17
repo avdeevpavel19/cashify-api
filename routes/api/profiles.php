@@ -19,4 +19,5 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::post('/profiles/avatar', [MainController::class, 'uploadAvatar']);
     Route::get('/profiles', [MainController::class, 'index']);
     Route::put('/profiles/change-password', [MainController::class, 'changePassword']);
+    Route::post('/profiles/currency', [MainController::class, 'changeCurrency']);
 });

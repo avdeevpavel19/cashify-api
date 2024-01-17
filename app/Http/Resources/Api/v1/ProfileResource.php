@@ -21,6 +21,11 @@ class ProfileResource extends JsonResource
             'birthday' => $this->birthday,
             'gender' => $this->gender,
             'country' => $this->country,
+            'currency' => [
+                'id' => $this->currency_id,
+                'code' => $this->currency->code,
+                'name' => $this->currency->name,
+            ],
         ];
     }
 }

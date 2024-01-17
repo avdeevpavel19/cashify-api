@@ -17,11 +17,17 @@ class Profile extends Model
         'avatar',
         'birthday',
         'gender',
-        'country'
+        'country',
+        'currency_id'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency_id');
     }
 }

@@ -5,17 +5,16 @@ namespace App\Services\Api\v1;
 use App\Exceptions\AvatarAlreadyUploadedException;
 use App\Exceptions\NewPasswordSameAsCurrentException;
 use App\Exceptions\PasswordMismatchException;
+use App\Models\Currency;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class ProfileService
 {
-    public function store(array $data, int $userID): Profile
+    public function store(array $data, User $user): Profile
     {
-        $profile = Profile::where('user_id', $userID)->firstOrFail();
-
-        $profile->update($data);
+        $profile = $user->profile()->update($data);
 
         return $profile;
     }
@@ -57,5 +56,14 @@ class ProfileService
         $user->update(['password' => \Hash::make($newPassword)]);
 
         return true;
+    }
+
+    public function changeCurrency(User $user, int $currencyID): Currency
+    {
+        $profile = $user->profile()->first();
+        $profile->update(['currency_id' => $currencyID]);
+        $currency = $user->profile->currency;
+
+        return $currency;
     }
 }

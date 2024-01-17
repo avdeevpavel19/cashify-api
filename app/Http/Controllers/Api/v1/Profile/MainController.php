@@ -9,9 +9,11 @@ use App\Exceptions\NewPasswordSameAsCurrentException;
 use App\Exceptions\PasswordMismatchException;
 use App\Exceptions\UploadException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\v1\Profile\ChangeCurrencyRequest;
 use App\Http\Requests\Api\v1\Profile\ChangePasswordRequest;
 use App\Http\Requests\Api\v1\Profile\StoreRequest;
 use App\Http\Requests\Api\v1\Profile\UploadAvatarRequest;
+use App\Http\Resources\Api\v1\CurrencyResource;
 use App\Http\Resources\Api\v1\ProfileResource;
 use App\Models\User;
 use App\Services\Api\v1\ProfileService;
@@ -41,7 +43,7 @@ class MainController extends Controller
     {
         try {
             $validatedData = $request->validated();
-            $profile = $this->service->store($validatedData, $this->userID);
+            $profile = $this->service->store($validatedData, $this->user);
 
             return new ProfileResource($profile);
         } catch (BaseException) {
@@ -109,6 +111,20 @@ class MainController extends Controller
             throw new NewPasswordSameAsCurrentException($sameAsCurrentException->getMessage());
         } catch (InternalServerException $serverException) {
             throw new InternalServerException($serverException->getMessage());
+        } catch (BaseException) {
+            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        }
+    }
+
+    /**
+     * @throws BaseException
+     */
+    public function changeCurrency(ChangeCurrencyRequest $request)
+    {
+        try {
+            $currency = $this->service->changeCurrency($this->user, $request->validated()['currency_id']);
+
+            return new CurrencyResource($currency);
         } catch (BaseException) {
             throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
         }
