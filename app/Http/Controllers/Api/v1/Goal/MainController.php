@@ -71,8 +71,7 @@ class MainController extends Controller
     }
 
     /**
-     * @throws BaseException
-     * @throws EntityNotFoundException
+     * @throws BaseException|EntityNotFoundException
      */
     public function update(UpdateRequest $request, int $goalID)
     {
@@ -80,6 +79,22 @@ class MainController extends Controller
             $validatedData = $request->validated();
             $goal = $this->service->update($validatedData, $goalID, $this->user);
             return new GoalResource($goal);
+        } catch (EntityNotFoundException $notFoundException) {
+            throw new EntityNotFoundException($notFoundException->getMessage());
+        } catch (BaseException) {
+            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        }
+    }
+
+    /**
+     * @throws BaseException|EntityNotFoundException
+     */
+    public function destroy(int $goalID)
+    {
+        try {
+            $this->service->destroy($this->user, $goalID);
+
+            return response()->json(['message' => 'Цель успешно удалена']);
         } catch (EntityNotFoundException $notFoundException) {
             throw new EntityNotFoundException($notFoundException->getMessage());
         } catch (BaseException) {

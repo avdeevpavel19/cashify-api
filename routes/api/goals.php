@@ -20,4 +20,5 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/goals', [MainController::class, 'index']);
     Route::get('/goals/{goalID}', [MainController::class, 'show']);
     Route::patch('/goals/{goalID}', [MainController::class, 'update']);
+    Route::delete('/goals/{goalID}', [MainController::class, 'destroy']);
 });

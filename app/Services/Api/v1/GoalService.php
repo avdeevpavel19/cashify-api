@@ -48,6 +48,18 @@ class GoalService
     /**
      * @throws EntityNotFoundException
      */
+    public function destroy(User $user, int $goalID): bool
+    {
+        $goal = $this->checkGoalOwner($goalID, $user);
+
+        $goal->delete();
+
+        return true;
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
     private function checkGoalOwner(int $goalID, User $user): Goal
     {
         $goal = $user->goals()->where('id', $goalID)->first();
