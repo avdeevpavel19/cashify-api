@@ -19,5 +19,5 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::post('/goals', [MainController::class, 'store']);
     Route::get('/goals', [MainController::class, 'index']);
     Route::get('/goals/{goalID}', [MainController::class, 'show']);
-
+    Route::patch('/goals/{goalID}', [MainController::class, 'update']);
 });

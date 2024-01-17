@@ -28,6 +28,28 @@ class GoalService
      */
     public function show(User $user, int $goalID): Goal
     {
+        $goal = $this->checkGoalOwner($goalID, $user);
+
+        return $goal;
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function update(array $data, int $goalID, User $user): Goal
+    {
+        $goal = $this->checkGoalOwner($goalID, $user);
+
+        $goal->update($data);
+
+        return $goal;
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    private function checkGoalOwner(int $goalID, User $user): Goal
+    {
         $goal = $user->goals()->where('id', $goalID)->first();
 
         if (!$goal) {

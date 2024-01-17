@@ -6,6 +6,7 @@ use App\Exceptions\BaseException;
 use App\Exceptions\EntityNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Goal\StoreRequest;
+use App\Http\Requests\Api\v1\Goal\UpdateRequest;
 use App\Http\Resources\Api\v1\GoalCollection;
 use App\Http\Resources\Api\v1\GoalResource;
 use App\Models\User;
@@ -61,6 +62,23 @@ class MainController extends Controller
     {
         try {
             $goal = $this->service->show($this->user, $goalID);
+            return new GoalResource($goal);
+        } catch (EntityNotFoundException $notFoundException) {
+            throw new EntityNotFoundException($notFoundException->getMessage());
+        } catch (BaseException) {
+            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        }
+    }
+
+    /**
+     * @throws BaseException
+     * @throws EntityNotFoundException
+     */
+    public function update(UpdateRequest $request, int $goalID)
+    {
+        try {
+            $validatedData = $request->validated();
+            $goal = $this->service->update($validatedData, $goalID, $this->user);
             return new GoalResource($goal);
         } catch (EntityNotFoundException $notFoundException) {
             throw new EntityNotFoundException($notFoundException->getMessage());
