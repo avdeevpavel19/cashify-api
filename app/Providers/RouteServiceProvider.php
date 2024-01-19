@@ -36,7 +36,8 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/api/profiles.php'))
                 ->group(base_path('routes/api/categories.php'))
                 ->group(base_path('routes/api/transactions.php'))
-                ->group(base_path('routes/api/goals.php'));
+                ->group(base_path('routes/api/goals.php'))
+                ->group(base_path('routes/api/currencies.php'));
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
