@@ -3,6 +3,7 @@
 namespace App\Services\Api\v1;
 
 use App\Exceptions\ExchangeRateDataNotReceivedException;
+use App\Exceptions\InvalidRateApiTokenException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Uri;
@@ -17,11 +18,16 @@ class RateService
     }
 
     /**
-     * @throws ExchangeRateDataNotReceivedException|GuzzleException
+     * @throws GuzzleException
+     * @throws InvalidRateApiTokenException|ExchangeRateDataNotReceivedException
      */
     public function get($baseCurrency = "RUB"): array
     {
         $access_key = config('services.currency_api.key');
+
+        if (!$access_key) {
+            throw new InvalidRateApiTokenException('Невалидный API токен курса валют');
+        }
 
         $uri = new Uri('http://apilayer.net/api/live');
         $uri = Uri::withQueryValue($uri, 'access_key', $access_key);
@@ -29,8 +35,8 @@ class RateService
         $uri = Uri::withQueryValue($uri, 'source', $baseCurrency);
         $uri = Uri::withQueryValue($uri, 'format', 1);
 
-        $response = $this->client->get((string)$uri);
-        $contents = $response->getBody()->getContents();
+        $response    = $this->client->get((string)$uri);
+        $contents    = $response->getBody()->getContents();
         $decodedData = json_decode($contents, true);
 
         if (empty($decodedData['quotes'])) {
