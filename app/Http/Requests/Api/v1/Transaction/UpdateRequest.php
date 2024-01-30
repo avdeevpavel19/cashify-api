@@ -22,22 +22,22 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => ['sometimes', 'numeric', 'between:0,999999.99'],
+            'amount'      => ['sometimes', 'numeric', 'between:0,999999.99'],
             'category_id' => ['sometimes', 'integer'],
-            'date' => ['sometimes', 'date'],
+            'date'        => ['sometimes', 'date'],
             'description' => ['sometimes', 'string', 'max:1000'],
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'amount.numeric' => 'Сумма должна быть числом.',
-            'amount.between' => 'Сумма должна быть между 0 и 999999.',
+            'amount.numeric'      => 'Сумма должна быть числом.',
+            'amount.between'      => 'Сумма должна быть между 0 и 999999.',
             'category_id.integer' => 'Категория должна быть целым числом.',
-            'date.date' => 'Дата должна быть действительной датой.',
-            'description.string' => 'Описание должно быть строкой.',
-            'description.max' => 'Описание не должно превышать 1000 символов.',
+            'date.date'           => 'Дата должна быть действительной датой.',
+            'description.string'  => 'Описание должно быть строкой.',
+            'description.max'     => 'Описание не должно превышать 1000 символов.',
         ];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1\ExchangeRates;
 
-use App\Exceptions\BaseException;
+use App\Exceptions\InternalServerException;
 use App\Exceptions\ExchangeRateDataNotReceivedException;
 use App\Exceptions\InvalidRateApiTokenException;
 use App\Http\Controllers\Controller;
@@ -14,14 +14,14 @@ class MainController extends Controller
 {
     protected RateService $service;
 
-    public function __construct()
+    public function __construct(RateService $service)
     {
-        $this->service = new RateService;
+        $this->service = $service;
     }
 
     /**
      * @throws GuzzleException
-     * @throws InvalidRateApiTokenException|ExchangeRateDataNotReceivedException|BaseException
+     * @throws InvalidRateApiTokenException|ExchangeRateDataNotReceivedException|InternalServerException
      */
     public function get(): RateResource
     {
@@ -33,8 +33,8 @@ class MainController extends Controller
             throw new InvalidRateApiTokenException($apiRateTokenException->getMessage());
         } catch (ExchangeRateDataNotReceivedException $dataNotReceivedException) {
             throw new ExchangeRateDataNotReceivedException($dataNotReceivedException->getMessage());
-        } catch (BaseException) {
-            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        } catch (InternalServerException) {
+            throw new InternalServerException('На сервере что-то случилось.Повторите попытку позже');
         }
     }
 }

@@ -22,17 +22,17 @@ class UploadAvatarRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048']
+            'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:20480']
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'avatar.required' => 'Загрузка аватара обязательна.',
-            'avatar.image' => 'Аватар должен быть изображением.',
-            'avatar.mimes' => 'Аватар должен быть в формате jpeg, png, jpg, gif.',
-            'avatar.max' => 'Аватар не должен превышать размер 2048 килобайт.',
+            'avatar.image'    => 'Аватар должен быть изображением.',
+            'avatar.mimes'    => 'Аватар должен быть в формате jpeg, png, jpg, gif.',
+            'avatar.max'      => 'Аватар не должен превышать размер 20 МБ.',
         ];
     }
 }

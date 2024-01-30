@@ -2,47 +2,48 @@
 
 namespace App\Http\Controllers\Api\v1\Auth;
 
-use App\Exceptions\BaseException;
+use App\Exceptions\InternalServerException;
 use App\Exceptions\InvalidResetTokenException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Auth\ResetPassword\ResetRequest;
 use App\Http\Requests\Api\v1\Auth\ResetPassword\SendLinkRequest;
 use App\Services\Api\v1\Auth\ResetPasswordService;
+use Illuminate\Http\JsonResponse;
 
 class ResetPasswordController extends Controller
 {
     protected ResetPasswordService $service;
 
-    public function __construct()
+    public function __construct(ResetPasswordService $service)
     {
-        $this->service = new  ResetPasswordService;
+        $this->service = $service;
     }
 
     /**
-     * @throws BaseException
+     * @throws InternalServerException
      */
-    public function sendLinkToEmail(SendLinkRequest $request)
+    public function sendLinkToEmail(SendLinkRequest $request): JsonResponse
     {
         try {
             $validatedData = $request->validated();
-            $resetLink = $this->service->sendLinkToEmail($validatedData);
+            $resetLink     = $this->service->sendLinkToEmail($validatedData);
 
             if ($resetLink) {
                 return response()->json(['message' => 'Ссылка для сброса пароля отправлена']);
             }
-        } catch (BaseException) {
-            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        } catch (InternalServerException) {
+            throw new InternalServerException('На сервере что-то случилось.Повторите попытку позже');
         }
     }
 
     /**
-     * @throws BaseException
+     * @throws InternalServerException|InvalidResetTokenException
      */
-    public function reset(ResetRequest $request)
+    public function reset(ResetRequest $request): JsonResponse
     {
         try {
             $tokenFromURL = \Request::segment(3);
-            $newPassword = $request->validated()['password'];
+            $newPassword  = $request->validated()['password'];
 
             $reset = $this->service->reset($tokenFromURL, $newPassword);
 
@@ -51,8 +52,8 @@ class ResetPasswordController extends Controller
             }
         } catch (InvalidResetTokenException $resetTokenException) {
             throw new InvalidResetTokenException($resetTokenException->getMessage());
-        } catch (BaseException) {
-            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        } catch (InternalServerException) {
+            throw new InternalServerException('На сервере что-то случилось.Повторите попытку позже');
         }
     }
 }

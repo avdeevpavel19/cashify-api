@@ -26,13 +26,13 @@ class ResetRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'password.required' => 'Пароль обязателен к заполнению.',
-            'password.string' => 'Пароль должен быть строкой.',
+            'password.required'  => 'Пароль обязателен к заполнению.',
+            'password.string'    => 'Пароль должен быть строкой.',
             'password.confirmed' => 'Пароли не совпадают.',
-            'password.min' => 'Пароль должен содержать не менее 5 символов.',
+            'password.min'       => 'Пароль должен содержать не менее 5 символов.',
         ];
     }
 }

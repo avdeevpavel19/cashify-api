@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1\Auth;
 
-use App\Exceptions\BaseException;
+use App\Exceptions\InternalServerException;
 use App\Exceptions\EmailAlreadyVerifiedException;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Verified;
@@ -11,8 +11,7 @@ use Illuminate\Http\JsonResponse;
 class VerificationController extends Controller
 {
     /**
-     * @throws BaseException
-     * @throws EmailAlreadyVerifiedException
+     * @throws InternalServerException|EmailAlreadyVerifiedException
      */
     public function resend(): JsonResponse
     {
@@ -28,16 +27,15 @@ class VerificationController extends Controller
             return response()->json(['message' => 'Вам на почту отправлено письмо для верификации аккаунта']);
         } catch (EmailAlreadyVerifiedException $verifiedException) {
             throw new EmailAlreadyVerifiedException($verifiedException->getMessage());
-        } catch (BaseException) {
-            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        } catch (InternalServerException) {
+            throw new InternalServerException('На сервере что-то случилось.Повторите попытку позже');
         }
     }
 
     /**
-     * @throws BaseException
-     * @throws EmailAlreadyVerifiedException
+     * @throws InternalServerException|EmailAlreadyVerifiedException
      */
-    public function verify()
+    public function verify(): JsonResponse
     {
         try {
             $user = \Auth::user();
@@ -53,8 +51,8 @@ class VerificationController extends Controller
             return response()->json(['message' => 'Аккаунт успешно верифицирован']);
         } catch (EmailAlreadyVerifiedException $verifiedException) {
             throw new EmailAlreadyVerifiedException($verifiedException->getMessage());
-        } catch (BaseException) {
-            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        } catch (InternalServerException) {
+            throw new InternalServerException('На сервере что-то случилось.Повторите попытку позже');
         }
     }
 }

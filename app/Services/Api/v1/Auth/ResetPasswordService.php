@@ -28,8 +28,8 @@ class ResetPasswordService
             \DB::table('password_reset_tokens')
                 ->where('email', $email)
                 ->insert([
-                    'email' => $email,
-                    'token' => $token,
+                    'email'      => $email,
+                    'token'      => $token,
                     'created_at' => now()
                 ]);
         }

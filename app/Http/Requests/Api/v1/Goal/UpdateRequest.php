@@ -22,20 +22,20 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['sometimes', 'string', 'max:255'],
-            'amount' => ['sometimes', 'numeric', 'min:0'],
+            'title'    => ['sometimes', 'string', 'max:255'],
+            'amount'   => ['sometimes', 'numeric', 'min:0'],
             'deadline' => ['sometimes', 'date', 'after:today'],
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'title.string' => 'Название должно быть строкой.',
-            'title.max' => 'Название не должно превышать 255 символов.',
+            'title.string'   => 'Название должно быть строкой.',
+            'title.max'      => 'Название не должно превышать 255 символов.',
             'amount.numeric' => 'Сумма должна быть числом.',
-            'amount.min' => 'Сумма должна быть не менее :min символов.',
-            'deadline.date' => 'Срок должен быть датой.',
+            'amount.min'     => 'Сумма должна быть не менее :min символов.',
+            'deadline.date'  => 'Срок должен быть датой.',
             'deadline.after' => 'Срок должен быть после сегодняшней даты.',
         ];
     }

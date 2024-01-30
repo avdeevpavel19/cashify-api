@@ -15,8 +15,8 @@ class GoalResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'title' => $this->title,
-            'amount' => $this->amount,
+            'title'    => $this->title,
+            'amount'   => $this->amount,
             'deadline' => $this->deadline
         ];
     }

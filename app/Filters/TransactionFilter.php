@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 
 class TransactionFilter
 {
-    protected $query;
+    protected       $query;
     protected array $filters = [
-        'amount' => AmountFilter::class,
+        'amount'      => AmountFilter::class,
         'category_id' => CategoryFilter::class,
-        'date' => DateFilter::class,
+        'date'        => DateFilter::class,
     ];
 
     public function __construct($query)

@@ -22,24 +22,24 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255'],
-            'amount' => ['required', 'numeric', 'min:0'],
+            'title'    => ['required', 'string', 'max:255'],
+            'amount'   => ['required', 'numeric', 'min:0'],
             'deadline' => ['required', 'date', 'after:today'],
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'title.required' => 'Название обязательно для заполнения.',
-            'title.string' => 'Название должно быть строкой.',
-            'title.max' => 'Название не должно превышать 255 символов.',
-            'amount.required' => 'Сумма обязательна для заполнения.',
-            'amount.numeric' => 'Сумма должна быть числом.',
-            'amount.min' => 'Сумма должна быть не менее :min символов.',
+            'title.required'    => 'Название обязательно для заполнения.',
+            'title.string'      => 'Название должно быть строкой.',
+            'title.max'         => 'Название не должно превышать 255 символов.',
+            'amount.required'   => 'Сумма обязательна для заполнения.',
+            'amount.numeric'    => 'Сумма должна быть числом.',
+            'amount.min'        => 'Сумма должна быть не менее :min символов.',
             'deadline.required' => 'Срок обязателен для заполнения.',
-            'deadline.date' => 'Срок должен быть датой.',
-            'deadline.after' => 'Срок должен быть после сегодняшней даты.',
+            'deadline.date'     => 'Срок должен быть датой.',
+            'deadline.after'    => 'Срок должен быть после сегодняшней даты.',
         ];
     }
 }

@@ -17,6 +17,7 @@ class GoalCollection extends ResourceCollection
         return [
             'data' => $this->collection->transform(function ($transaction) use ($request) {
                 $resource = new GoalResource($transaction);
+
                 return array_merge(['id' => $transaction->id], $resource->toArray($request));
             })];
     }

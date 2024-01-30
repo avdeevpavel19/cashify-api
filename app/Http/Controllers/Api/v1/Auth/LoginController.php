@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1\Auth;
 
-use App\Exceptions\BaseException;
+use App\Exceptions\InternalServerException;
 use App\Exceptions\InvalidCredentialsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Auth\LoginUserRequest;
@@ -14,15 +14,13 @@ class LoginController extends Controller
 {
     protected LoginService $service;
 
-    public function __construct()
+    public function __construct(LoginService $service)
     {
-        $this->service = new LoginService;
+        $this->service = $service;
     }
 
-
     /**
-     * @throws BaseException
-     * @throws InvalidCredentialsException
+     * @throws InternalServerException|InvalidCredentialsException
      */
     public function store(LoginUserRequest $request): JsonResponse
     {
@@ -33,26 +31,26 @@ class LoginController extends Controller
 
             return response()->json([
                 'access_token' => $accessToken,
-                'type' => 'Bearer'
+                'type'         => 'Bearer'
             ]);
         } catch (InvalidCredentialsException $credentialsException) {
             throw new InvalidCredentialsException($credentialsException->getMessage());
-        } catch (BaseException) {
-            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        } catch (InternalServerException) {
+            throw new InternalServerException('На сервере что-то случилось.Повторите попытку позже');
         }
     }
 
     /**
-     * @throws BaseException
+     * @throws InternalServerException
      */
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         try {
             $request->user()->currentAccessToken()->delete();
 
             return response()->json(['message' => 'Вы вышли из системы.']);
-        } catch (BaseException) {
-            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        } catch (InternalServerException) {
+            throw new InternalServerException('На сервере что-то случилось.Повторите попытку позже');
         }
     }
 }

@@ -5,20 +5,21 @@ namespace App\Services\Api\v1;
 use App\Exceptions\EntityNotFoundException;
 use App\Models\Goal;
 use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class GoalService
 {
     public function store(array $data, int $userID): Goal
     {
         return Goal::create([
-            'title' => $data['title'],
-            'amount' => $data['amount'],
+            'title'    => $data['title'],
+            'amount'   => $data['amount'],
             'deadline' => $data['deadline'],
-            'user_id' => $userID
+            'user_id'  => $userID
         ]);
     }
 
-    public function index(User $user)
+    public function index(User $user): LengthAwarePaginator
     {
         return $user->goals()->paginate(25);
     }

@@ -20,19 +20,15 @@ class TransactionService
     {
         $this->validateCategoryExists($user, $data['category_id']);
 
-        return Transaction::create([
-            "user_id" => $user->id,
-            "amount" => $data["amount"],
-            "category_id" => $data["category_id"],
-            "date" => $data["date"],
-            "description" => $data["description"]
-        ]);
+        $data['user_id'] = $user->id;
+
+        return Transaction::create($data);
     }
 
     public function index(User $user, Request $request): LengthAwarePaginator
     {
         $transactions = $user->transactions();
-        $filter = new TransactionFilter($transactions);
+        $filter       = new TransactionFilter($transactions);
         $filter->apply($request);
 
         return $transactions->paginate(25);
@@ -77,13 +73,13 @@ class TransactionService
             ->get()
             ->groupBy('category.id')
             ->map(function ($transactions) {
-                $category = $transactions->first()->category;
-                $totalIncome = $transactions->where('category.belongs_to', 'income')->sum('amount');
+                $category     = $transactions->first()->category;
+                $totalIncome  = $transactions->where('category.belongs_to', 'income')->sum('amount');
                 $totalExpense = $transactions->where('category.belongs_to', 'expense')->sum('amount');
 
                 return [
                     'category_name' => $category->name,
-                    'total_income' => $totalIncome,
+                    'total_income'  => $totalIncome,
                     'total_expense' => $totalExpense
                 ];
             })->sortBy('category.id')->values();
@@ -96,7 +92,7 @@ class TransactionService
      */
     private function validateCategoryExists(User $user, string $categoryID): void
     {
-        $userCategories = $user->categories()->where('id', $categoryID)->exists();
+        $userCategories    = $user->categories()->where('id', $categoryID)->exists();
         $defaultCategories = Category::whereNull('user_id')
             ->where('id', $categoryID)
             ->exists();

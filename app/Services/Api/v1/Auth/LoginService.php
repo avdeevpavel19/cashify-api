@@ -16,7 +16,7 @@ class LoginService
             throw new InvalidCredentialsException('Неверные учетные данные');
         }
 
-        $user = Auth::user();
+        $user  = Auth::user();
         $token = $user->createToken('access_token')->plainTextToken;
 
         return $token;

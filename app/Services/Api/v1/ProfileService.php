@@ -14,7 +14,9 @@ class ProfileService
 {
     public function store(array $data, User $user): Profile
     {
-        $profile = $user->profile()->update($data);
+        $profile = $user->profile()->first();
+
+        $profile->update($data);
 
         return $profile;
     }
@@ -24,8 +26,8 @@ class ProfileService
      */
     public function upload(object $avatar, User $user): bool
     {
-        $avatarName = $avatar->getClientOriginalName();
-        $avatarPath = $avatar->storeAs('avatars', $avatarName, 'public');
+        $avatarName        = $avatar->getClientOriginalName();
+        $avatarPath        = $avatar->storeAs('avatars', $avatarName, 'public');
         $checkAvatarExists = $user->profile()->where('avatar', $avatarPath)->exists();
 
         if ($checkAvatarExists) {
@@ -43,7 +45,7 @@ class ProfileService
     public function changePassword(array $data, User $user): bool
     {
         $currentPassword = $data['current_password'];
-        $newPassword = $data['new_password'];
+        $newPassword     = $data['new_password'];
 
         if (!Hash::check($currentPassword, $user->password)) {
             throw new PasswordMismatchException('Введенный пароль не совпадает с текущим');

@@ -15,20 +15,20 @@ class CurrencySeeder extends Seeder
     {
         DB::table('currencies')->insert([
             [
-                'code' => 'RUB',
-                'name' => 'Russian Ruble',
+                'code'       => 'RUB',
+                'name'       => 'Russian Ruble',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'code' => 'USD',
-                'name' => 'United States Dollar',
+                'code'       => 'USD',
+                'name'       => 'United States Dollar',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'code' => 'EUR',
-                'name' => 'Euro',
+                'code'       => 'EUR',
+                'name'       => 'Euro',
                 'created_at' => now(),
                 'updated_at' => now()
             ]

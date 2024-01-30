@@ -23,17 +23,17 @@ class ChangePasswordRequest extends FormRequest
     {
         return [
             'current_password' => ['required'],
-            'new_password' => ['required', 'string', 'min:5'],
+            'new_password'     => ['required', 'string', 'min:5'],
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'current_password.required' => 'Текущий пароль обязателен к заполнению.',
-            'new_password.required' => 'Новый пароль обязателен к заполнению.',
-            'new_password.string' => 'Новый пароль должен быть строкой.',
-            'new_password.min' => 'Новый пароль должен содержать не менее 5 символов.',
+            'new_password.required'     => 'Новый пароль обязателен к заполнению.',
+            'new_password.string'       => 'Новый пароль должен быть строкой.',
+            'new_password.min'          => 'Новый пароль должен содержать не менее 5 символов.',
         ];
     }
 }

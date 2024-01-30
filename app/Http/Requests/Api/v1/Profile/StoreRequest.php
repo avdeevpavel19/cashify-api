@@ -24,25 +24,25 @@ class StoreRequest extends FormRequest
     {
         return [
             'first_name' => ['sometimes', 'string', 'max:255'],
-            'last_name' => ['sometimes', 'string', 'max:255'],
-            'birthday' => ['sometimes', 'date', 'before_or_equal:today'],
-            'gender' => ['sometimes', Rule::in(['male', 'female', 'not specified'])],
-            'country' => ['sometimes', 'string', 'max:255'],
+            'last_name'  => ['sometimes', 'string', 'max:255'],
+            'birthday'   => ['sometimes', 'date', 'before_or_equal:today'],
+            'gender'     => ['sometimes', Rule::in(['male', 'female', 'not specified'])],
+            'country'    => ['sometimes', 'string', 'max:255'],
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'first_name.string' => 'Имя должно быть строкой.',
-            'first_name.max' => 'Имя не должно превышать 255 символов.',
-            'last_name.string' => 'Фамилия должна быть строкой.',
-            'last_name.max' => 'Фамилия не должна превышать 255 символов.',
-            'birthday.date' => 'Дата рождения должна быть в корректном формате.',
+            'first_name.string'        => 'Имя должно быть строкой.',
+            'first_name.max'           => 'Имя не должно превышать 255 символов.',
+            'last_name.string'         => 'Фамилия должна быть строкой.',
+            'last_name.max'            => 'Фамилия не должна превышать 255 символов.',
+            'birthday.date'            => 'Дата рождения должна быть в корректном формате.',
             'birthday.before_or_equal' => 'Дата рождения не может быть в будущем.',
-            'gender.in' => 'Недопустимое значение для поля пол.',
-            'country.string' => 'Страна должна быть строкой.',
-            'country.max' => 'Страна не должна превышать 255 символов.',
+            'gender.in'                => 'Недопустимое значение для поля пол.',
+            'country.string'           => 'Страна должна быть строкой.',
+            'country.max'              => 'Страна не должна превышать 255 символов.',
         ];
     }
 }

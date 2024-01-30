@@ -16,13 +16,13 @@ class CategorySeeder extends Seeder
         DB::table('categories')->insert([
             [
                 'belongs_to' => 'income',
-                'name' => 'Зарплата',
+                'name'       => 'Зарплата',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'belongs_to' => 'expense',
-                'name' => 'Продукты',
+                'name'       => 'Продукты',
                 'created_at' => now(),
                 'updated_at' => now()
             ]

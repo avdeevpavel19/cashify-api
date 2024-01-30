@@ -22,17 +22,17 @@ class LoginUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email', 'exists:users,email'],
+            'email'    => ['required', 'email', 'exists:users,email'],
             'password' => ['required'],
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'email.required' => 'Адрес электронной почты обязателен к заполнению.',
-            'email.email' => 'Адрес электронной почты должен быть действительным электронным адресом.',
-            'email.exists' => 'Указанный адрес электронной почты не найден.',
+            'email.required'    => 'Адрес электронной почты обязателен к заполнению.',
+            'email.email'       => 'Адрес электронной почты должен быть действительным электронным адресом.',
+            'email.exists'      => 'Указанный адрес электронной почты не найден.',
             'password.required' => 'Пароль обязателен к заполнению.',
         ];
     }

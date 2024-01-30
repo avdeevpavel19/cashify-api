@@ -26,12 +26,12 @@ class SendLinkRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'email.required' => 'Адрес электронной почты обязателен к заполнению.',
-            'email.email' => 'Адрес электронной почты должен быть действительным электронным адресом.',
-            'email.exists' => 'Указанный адрес электронной почты не найден.',
+            'email.email'    => 'Адрес электронной почты должен быть действительным электронным адресом.',
+            'email.exists'   => 'Указанный адрес электронной почты не найден.',
         ];
     }
 }

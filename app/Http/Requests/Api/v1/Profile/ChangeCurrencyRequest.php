@@ -26,12 +26,12 @@ class ChangeCurrencyRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'currency_id.required' => 'currency_id является обязательным.',
-            'currency_id.numeric' => 'currency_id должно быть числовым.',
-            'currency_id.exists' => 'Указанной валюты не существует.'
+            'currency_id.numeric'  => 'currency_id должно быть числовым.',
+            'currency_id.exists'   => 'Указанной валюты не существует.'
         ];
     }
 }

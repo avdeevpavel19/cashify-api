@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1\FinancialReport;
 
-use App\Exceptions\BaseException;
+use App\Exceptions\InternalServerException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\FinancialReport\GenerateRequest;
 use App\Models\User;
@@ -15,9 +15,10 @@ class MainController extends Controller
     protected ReportService $service;
     protected User          $user;
 
-    public function __construct()
+    public function __construct(ReportService $service)
     {
-        $this->service = new ReportService;
+        $this->service = $service;
+
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
 
@@ -26,7 +27,7 @@ class MainController extends Controller
     }
 
     /**
-     * @throws BaseException
+     * @throws InternalServerException
      */
     public function generate(GenerateRequest $request): JsonResponse
     {
@@ -37,8 +38,8 @@ class MainController extends Controller
             $report = $this->service->generate($startDate, $endDate, $this->user);
 
             return response()->json(['report' => $report]);
-        } catch (BaseException) {
-            throw new BaseException('На сервере что-то случилось.Повторите попытку позже');
+        } catch (InternalServerException) {
+            throw new InternalServerException('На сервере что-то случилось.Повторите попытку позже');
         }
     }
 }

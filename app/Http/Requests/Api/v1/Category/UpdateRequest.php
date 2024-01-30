@@ -23,17 +23,17 @@ class UpdateRequest extends FormRequest
     {
         return [
             'belongs_to' => ['sometimes', 'string', 'max:255'],
-            'name' => ['sometimes', 'string', 'max:255']
+            'name'       => ['sometimes', 'string', 'max:255']
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'belongs_to.string' => 'Поле "belongs_to" должно быть строкой.',
-            'belongs_to.max' => 'Поле "belongs_to" не должно превышать 255 символов.',
-            'name.string' => 'Название должно быть строкой.',
-            'name.max' => 'Название не должно превышать 255 символов.',
+            'belongs_to.max'    => 'Поле "belongs_to" не должно превышать 255 символов.',
+            'name.string'       => 'Название должно быть строкой.',
+            'name.max'          => 'Название не должно превышать 255 символов.',
         ];
     }
 }
