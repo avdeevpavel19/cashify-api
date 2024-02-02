@@ -20,9 +20,9 @@ services:
       - DB_CONNECTION=${DB_CONNECTION:-mysql}
       - DB_HOST=${DB_HOST:-db}
       - DB_PORT=${DB_PORT:-3306}
-      - DB_DATABASE=${DB_DATABASE:-your_db}
-      - DB_USERNAME=${DB_USERNAME:-your_username}
-      - DB_PASSWORD=${DB_PASSWORD:-your_password}
+      - DB_DATABASE=${DB_DATABASE:-cashify}
+      - DB_USERNAME=${DB_USERNAME:-admin}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
       - MAIL_MAILER=${MAIL_MAILER:-smtp}
       - MAIL_HOST=${MAIL_HOST:-smtp.gmail.com}
       - MAIL_PORT=${MAIL_PORT:-587}
