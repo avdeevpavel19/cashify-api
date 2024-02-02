@@ -42,7 +42,7 @@ class VerifyEmailNotification extends Notification
             ->line('Пожалуйста, подтвердите свой адрес электронной почты.')
             ->action('Подтвердить', $verificationURL)
             ->line('Если вы не регистрировались на нашем сайте, просто проигнорируйте это письмо.')
-            ->salutation('С уважением, ваша команда ' . config('app.name'));
+            ->salutation('С уважением, ваша команда ' . 'Cashify');
     }
 
     /**
