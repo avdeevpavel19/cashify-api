@@ -26,8 +26,8 @@ services:
       - MAIL_MAILER=${MAIL_MAILER:-smtp}
       - MAIL_HOST=${MAIL_HOST:-smtp.gmail.com}
       - MAIL_PORT=${MAIL_PORT:-587}
-      - MAIL_USERNAME=${MAIL_USERNAME:-cashify.off@gmail.com}
-      - MAIL_PASSWORD=${MAIL_PASSWORD:-kywsatdxofpjpyvl}
+      - MAIL_USERNAME=${MAIL_USERNAME:-your_username}
+      - MAIL_PASSWORD=${MAIL_PASSWORD:-your_password}
       - MAIL_ENCRYPTION=${MAIL_ENCRYPTION:-tls}
       - MAIL_FROM_NAME=${MAIL_FROM_NAME:-Cashify}
       - CURRENCY_API_KEY=${CURRENCY_API_KEY:-your_api_key}
