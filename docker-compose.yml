@@ -30,7 +30,6 @@ services:
       - MAIL_PASSWORD=${MAIL_PASSWORD:-your_password}
       - MAIL_ENCRYPTION=${MAIL_ENCRYPTION:-tls}
       - MAIL_FROM_NAME=${MAIL_FROM_NAME:-Cashify}
-      - CURRENCY_API_KEY=${CURRENCY_API_KEY:-your_api_key}
     depends_on:
       - db
 
